@@ -13,6 +13,7 @@ import type { PropsWithChildren } from 'react';
 import {
   Alert,
   Button,
+  DevSettings,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -82,36 +83,6 @@ function App(this: any): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [data, setdata] = useState<any[][]>();
-  const [price, setdataBTC] = useState<PriceBTC>();
-
-  useEffect(() => {
-    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=10')
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data);
-        setdata(data);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-      .then((res) => res.json())
-      .then((price) => {
-        // console.log(data);
-        setdataBTC(price);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, []);
-
-
-
-
 
   //Get Current Date
   var date = new Date().getDate();
@@ -132,26 +103,6 @@ function App(this: any): JSX.Element {
   var sec = new Date().getSeconds();
 
   var finalObject = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
-
-
-
-
-  let count = 0;
-
-  const candless = [
-
-    { x: data && data[0][0], open: data && data[0][1], close: data && data[0][4], high: data && data[0][2], low: data && data[0][3] },
-
-  ];
-
-  data?.map((items, indexes) => {
-
-    var STARTdate = new Date(data && data[indexes][0]);
-    //console.log(STARTdate.toLocaleString());
-    candless.push({ x: STARTdate, open: data[indexes][1], close: data[indexes][4], high: data[indexes][2], low: data[indexes][3] })
-
-  })
-
 
 
   const local_data = [
@@ -192,24 +143,206 @@ function App(this: any): JSX.Element {
     },
   ];
 
-
-
   const [country, setCountry] = useState('1');
 
 
 
+  const [price, setdataBTC] = useState<PriceBTC>();
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
+      .then((res) => res.json())
+      .then((price) => {
+        // console.log(data);
+        setdataBTC(price);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+
+
+
+
+
+
+
+  const [data, setdata] = useState<any[][]>();
+  // CALL 10 MIN
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=10')
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setdata(data);
+        setMinData(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  // CALL 1 HOUR in min
+  const [BTChour, setdata100] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=60')
+      .then((res) => res.json())
+      .then((data100) => {
+        // console.log(data);
+        setdata100(data100);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+// CALL 24 HOUR
+const [BTC24hour, setdata24] = useState<any[][]>();
+
+useEffect(() => {
+  fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24')
+    .then((res) => res.json())
+    .then((BTC24hour) => {
+      // console.log(data);
+      setdata24(BTC24hour);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+}, []);
+
+// CALL 1 WEEK
+const [BTCweek, setdataWeek] = useState<any[][]>();
+
+useEffect(() => {
+  fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=7')
+    .then((res) => res.json())
+    .then((BTCweek) => {
+      // console.log(data);
+      setdataWeek(BTCweek);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+}, []);
+
+
+
+  function SetHourGraph() {
+
+    setWidth(2);
+    setPadding(2);
+    setdata(BTChour);
+  }
+
+  function SetMinGraph() {
+
+    setWidth(10);
+    setPadding(20);
+    setdata(BTC10min);
+  }
+
+  function SetDayGraph() {
+
+    setWidth(5);
+    setPadding(15);
+    setdata(BTC24hour);
+  }
+  
+  function SetWeekGraph() {
+
+    setWidth(13);
+    setPadding(22);
+    setdata(BTCweek);
+  }
+
+
+
+
+
+
+
+
+  function SetSettings(t: any) {
+    //  console.log("TADYY-------------------------")
+    // console.log(data)
   
 
+    //  `${t.getDate()}/${t.getMonth()} ${t.getHours()}:${t.getMinutes()}`
+    if (data == BTC10min) {
+
+      console.log("min");
+      setTime('Min');
+      return (`${t.getMinutes()}`);
+    }
+
+    // hour 
+    if (data == BTChour) {
+
+      console.log("Hour ");
+      setTime('Hour : Min');
+
+      return (`${t.getHours()}:${t.getMinutes()}`)
+    }
+
+    if (data == BTC24hour) {
+
+      console.log("Hour 24 ");
+      setTime('Hour');
+      return (`${t.getHours()}`)
+    }
+
+    if (data == BTCweek) {
+
+      console.log(`${t.getDate()}`);
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
+
+  }
+
+
+  // BASIC SETTTINGS !!!!!!!!!!!!!!!!!!!!
+  const [settingspaddig, setPadding] = useState(30);
+  const [settingscandleWidth, setWidth] = useState(15);
+
+  //zaloha
+  const [BTC10min, setMinData] = useState<any[][]>();
+  // axis time
+  const [time, setTime] = useState('min');
+  
+  //Date [dataTimes, setTimeData] = useState<Date[]>();
+
+
+  let candless = [
+
+    { x: data && data[0][0], open: data && data[0][1], close: data && data[0][4], high: data && data[0][2], low: data && data[0][3] },
+
+  ];
+
+  data?.map((items, indexes) => {
+
+    var STARTdate = new Date(data && data[indexes][0]);
+
+    candless.push({ x: STARTdate, open: data[indexes][1], close: data[indexes][4], high: data[indexes][2], low: data[indexes][3] })
+
+  })
+
+  //--------------------------------------
 
 
   return (
     <ScrollView>
       <Section title="Introduction">
-        This app download data from Binance to show exact price of <Text style={styles.highlight}>BTC</Text> in editable intervals.
+        This app downloads data from Binance to show exact price of <Text style={styles.highlight}>BTC</Text> in editable intervals.
       </Section>
 
 
-      <Section title='testos'>
+      <Section title='Select currency'>
 
         <SelectCountry
           style={styles.dropdown}
@@ -217,7 +350,7 @@ function App(this: any): JSX.Element {
           placeholderStyle={styles.placeholderStyle}
           imageStyle={styles.imageStyle}
           iconStyle={styles.iconStyle}
-          maxHeight={50}
+          //  maxHeight={50}
           value={country}
           data={local_data}
           valueField="value"
@@ -248,54 +381,63 @@ function App(this: any): JSX.Element {
       <Section title='Chart'>
         <View style={styles.container}>
 
-          <Text style={styles.highlight}>
-            <VictoryChart
 
-              domainPadding={{ x: 50 }}
-              scale={{ x: "time" }}
+          <VictoryChart
+          
+            domainPadding={{ x: settingspaddig }}
+            scale={{ x: "time" }}
 
-            >
+          >
 
-              <VictoryAxis tickFormat={(t) => `${t.getHours()}:${t.getMinutes()}`} />
-              <VictoryAxis dependentAxis />
+            <VictoryAxis tickFormat={(t) => SetSettings(t)} label={time}/>
+            <VictoryAxis dependentAxis />
 
-              <VictoryCandlestick
-                candleWidth={10}
-                candleColors={{ positive: 'green', negative: 'red' }}
-                data={candless}
-              />
+            <VictoryCandlestick
+              candleWidth={settingscandleWidth}
+              candleColors={{ positive: 'green', negative: 'red' }}
+              data={candless}
+            />
+          </VictoryChart>
 
-
-            </VictoryChart>
-          </Text>
 
 
           <View style={styles.nextto}>
             <Button
-              title="10 min"
-              onPress={() => Alert.alert('Simple Button pressed')}
+              title="10 Min"
+              onPress={() => SetMinGraph()}
             />
 
             <Button
-              title="1 hour"
-              onPress={() => Alert.alert('Simple Button pressed')}
+              title="1 Hour"
+              onPress={() => SetHourGraph()}
             />
 
             <Button
-              title="10 hour"
-              onPress={() => saySomething('pablo')}
+              title="1 Day"
+              onPress={() => SetDayGraph()}
             />
 
-            
+            <Button
+              title="1 Week"
+              onPress={() => SetWeekGraph()}
+            />
+
+            <Button
+              title="1 Month"
+              onPress={() => Alert.alert('Simple Button pressed')}
+            />
 
           </View>
 
-
-          
-
-
-
         </View>
+
+
+
+
+
+
+
+
 
 
 
@@ -313,22 +455,6 @@ function App(this: any): JSX.Element {
 
 
 }
-
-
-/*
-<TouchableOpacity
-              onPress={() => Alert.alert('Simple Button pressed')}>
-
-              <Text
-                style={[
-                  styles.buttonLabel,
-                  
-                ]}>
-                PABLO
-              </Text>
-            </TouchableOpacity>
-*/
-
 
 
 
@@ -356,13 +482,15 @@ const styles = StyleSheet.create({
     color: 'green',
   },
 
-
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+
+
   },
+
 
   under: {
     flexDirection: 'column',
@@ -378,12 +506,11 @@ const styles = StyleSheet.create({
 
 
   dropdown: {
-    margin: 16,
-    height: 10,
-    width: 150,
+    width: 200,
+    height: 40,
     backgroundColor: '#EEEEEE',
-    borderRadius: 22,
-    paddingHorizontal: 8,
+    borderRadius: 10,
+
   },
   imageStyle: {
     width: 24,
@@ -403,22 +530,7 @@ const styles = StyleSheet.create({
   },
 
 
-  button: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 4,
-    backgroundColor: 'oldlace',
-    alignSelf: 'flex-start',
-    marginHorizontal: '1%',
-    marginBottom: 6,
-    minWidth: '48%',
-    textAlign: 'center',
-  },
-  buttonLabel: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: 'coral',
-  },
+
 
 });
 
@@ -434,9 +546,4 @@ function setdata(data: any) {
 
 
 
-function saySomething(something: any) {
-  
-  console.log(something);
-  
-}
 
