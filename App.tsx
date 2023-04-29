@@ -70,6 +70,15 @@ type PriceBTC = {
   price: string
 }
 
+type PriceETH = {
+  symbol: string
+  price: string
+}
+
+type PriceXRP = {
+  symbol: string
+  price: string
+}
 
 
 
@@ -105,45 +114,35 @@ function App(this: any): JSX.Element {
   var finalObject = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
 
 
-  const local_data = [
+  const currency_arr = [
     {
       value: '1',
       lable: 'BTC chart',
       image: {
-        uri: 'https://www.vigcenter.com/public/all/images/default-image.jpg',
+        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/Bitcoin.png', // TO DO: relativni PATH 
+
       },
     },
     {
       value: '2',
-      lable: 'Country 2000',
+      lable: 'ETH chart',
       image: {
-        uri: 'https://www.vigcenter.com/public/all/images/default-image.jpg',
+        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/ETH.png',
       },
     },
     {
       value: '3',
-      lable: 'Country 3',
+      lable: 'XRP chart',
       image: {
-        uri: 'https://www.vigcenter.com/public/all/images/default-image.jpg',
-      },
-    },
-    {
-      value: '4',
-      lable: 'Country 4',
-      image: {
-        uri: 'https://www.vigcenter.com/public/all/images/default-image.jpg',
-      },
-    },
-    {
-      value: '5',
-      lable: 'Country 5',
-      image: {
-        uri: 'https://www.vigcenter.com/public/all/images/default-image.jpg',
+        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/xrp.png',
       },
     },
   ];
 
-  const [country, setCountry] = useState('1');
+  const [currency, setCurrency] = useState('1');
+
+
+
 
 
 
@@ -160,14 +159,36 @@ function App(this: any): JSX.Element {
       });
   }, []);
 
+  const [priceETH, setdataETH] = useState<PriceETH>();
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT')
+      .then((res) => res.json())
+      .then((priceETH) => {
+        // console.log(data);
+        setdataETH(priceETH);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  const [priceXRP, setdataXRP] = useState<PriceXRP>();
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT')
+      .then((res) => res.json())
+      .then((priceXRP) => {
+        // console.log(data);
+        setdataXRP(priceXRP);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
 
 
 
-
-
-
-
+  // BTC DATA--------------------------------------------------------------------------------------
   const [data, setdata] = useState<any[][]>();
   // CALL 10 MIN
   useEffect(() => {
@@ -200,35 +221,209 @@ function App(this: any): JSX.Element {
   }, []);
 
 
-// CALL 24 HOUR
-const [BTC24hour, setdata24] = useState<any[][]>();
+  // CALL 24 HOUR
+  const [BTC24hour, setdata24] = useState<any[][]>();
 
-useEffect(() => {
-  fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24')
-    .then((res) => res.json())
-    .then((BTC24hour) => {
-      // console.log(data);
-      setdata24(BTC24hour);
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-}, []);
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=24')
+      .then((res) => res.json())
+      .then((BTC24hour) => {
+        // console.log(data);
+        setdata24(BTC24hour);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
-// CALL 1 WEEK
-const [BTCweek, setdataWeek] = useState<any[][]>();
+  // CALL 1 WEEK
+  const [BTCweek, setdataWeek] = useState<any[][]>();
 
-useEffect(() => {
-  fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=7')
-    .then((res) => res.json())
-    .then((BTCweek) => {
-      // console.log(data);
-      setdataWeek(BTCweek);
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-}, []);
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=7')
+      .then((res) => res.json())
+      .then((BTCweek) => {
+        // console.log(data);
+        setdataWeek(BTCweek);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  // CALL 1 Month
+  const [BTCmonth, setdataMonth] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=31')
+      .then((res) => res.json())
+      .then((BTCmonth) => {
+        // console.log(data);
+        setdataMonth(BTCmonth);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+  //--------------------------------------------------------         
+
+  // ETH DATA
+  const [ETH10m, setETHdata1Om] = useState<any[][]>();
+  // CALL 10 MIN
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1m&limit=10')
+      .then((res) => res.json())
+      .then((ETH10m) => {
+        // console.log(data);
+        setETHdata1Om(ETH10m);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  // CALL 1 HOUR in min
+  const [ETHhour, setETHh] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1m&limit=60')
+      .then((res) => res.json())
+      .then((ETHhour) => {
+        setETHh(ETHhour);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  // CALL 24 HOUR
+  const [ETH24hour, setETH24] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1h&limit=24')
+      .then((res) => res.json())
+      .then((ETH24hour) => {
+        // console.log(data);
+        setETH24(ETH24hour);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  // CALL 1 WEEK
+  const [ETHweek, setETHWeek] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=7')
+      .then((res) => res.json())
+      .then((ETHweek) => {
+        // console.log(data);
+        setETHWeek(ETHweek);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  // CALL 1 Month
+  const [ETHmonth, setETHMonth] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=1d&limit=31')
+      .then((res) => res.json())
+      .then((ETHmonth) => {
+        // console.log(data);
+        setETHMonth(ETHmonth);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  //--------------------------------------------------------          
+
+  // ETH DATA
+  const [XRP10m, setXRP1Om] = useState<any[][]>();
+  // CALL 10 MIN
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1m&limit=10')
+      .then((res) => res.json())
+      .then((XRP10m) => {
+        // console.log(data);
+        setXRP1Om(XRP10m);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  // CALL 1 HOUR in min
+  const [XRPhour, setXRPh] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1m&limit=60')
+      .then((res) => res.json())
+      .then((XRPhour) => {
+        setXRPh(XRPhour);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+  // CALL 24 HOUR
+  const [XRP24hour, setXRP24] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1h&limit=24')
+      .then((res) => res.json())
+      .then((XRP24hour) => {
+        // console.log(data);
+        setXRP24(XRP24hour);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  // CALL 1 WEEK
+  const [XRPweek, setXRPWeek] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1d&limit=7')
+      .then((res) => res.json())
+      .then((XRPweek) => {
+        // console.log(data);
+        setXRPWeek(XRPweek);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+  // CALL 1 Month
+  const [XRPmonth, setXRPMonth] = useState<any[][]>();
+
+  useEffect(() => {
+    fetch('https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1d&limit=31')
+      .then((res) => res.json())
+      .then((XRPmonth) => {
+        // console.log(data);
+        setXRPMonth(XRPmonth);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+
+
+
+
 
 
 
@@ -236,46 +431,100 @@ useEffect(() => {
 
     setWidth(2);
     setPadding(2);
-    setdata(BTChour);
+    if (currency == '1') {
+      setdata(BTChour);
+    }
+    if (currency == '2') {
+      setdata(ETHhour);
+    }
+    if (currency == '3') {
+      setdata(XRPhour);
+    }
   }
 
   function SetMinGraph() {
 
     setWidth(10);
     setPadding(20);
-    setdata(BTC10min);
+    if (currency == '1') {
+      setdata(BTC10min);
+    }
+    if (currency == '2') {
+      setdata(ETH10m);
+    }
+    if (currency == '3') {
+      setdata(XRP10m);
+    }
+
+
   }
 
   function SetDayGraph() {
 
     setWidth(5);
     setPadding(15);
-    setdata(BTC24hour);
+    if (currency == '1') {
+      setdata(BTC24hour);
+    }
+    if (currency == '2') {
+      setdata(ETH24hour);
+    }
+    if (currency == '3') {
+      setdata(XRP24hour);
+    }
   }
-  
+
   function SetWeekGraph() {
 
     setWidth(13);
     setPadding(22);
-    setdata(BTCweek);
+    if (currency == '1') {
+      setdata(BTCweek);
+    }
+    if (currency == '2') {
+      setdata(ETHweek);
+    }
+    if (currency == '3') {
+      setdata(XRPweek);
+    }
+  }
+
+  function SetMonthGraph() {
+
+    setWidth(5);
+    setPadding(15);
+    if (currency == '1') {
+      setdata(BTCmonth);
+    }
+    if (currency == '2') {
+      setdata(ETHmonth);
+    }
+    if (currency == '3') {
+      setdata(XRPmonth);
+    }
   }
 
 
 
 
 
-
-
-
+  // set setttings of graph
   function SetSettings(t: any) {
-    //  console.log("TADYY-------------------------")
-    // console.log(data)
-  
 
-    //  `${t.getDate()}/${t.getMonth()} ${t.getHours()}:${t.getMinutes()}`
+
     if (data == BTC10min) {
 
-      console.log("min");
+      setTime('Min');
+      return (`${t.getMinutes()}`);
+    }
+
+    if (data == ETH10m) {
+
+      setTime('Min');
+      return (`${t.getMinutes()}`);
+    }
+    if (data == XRP10m) {
+
       setTime('Min');
       return (`${t.getMinutes()}`);
     }
@@ -283,26 +532,70 @@ useEffect(() => {
     // hour 
     if (data == BTChour) {
 
-      console.log("Hour ");
       setTime('Hour : Min');
+      return (`${t.getHours()}:${t.getMinutes()}`)
+    }
+    if (data == ETHhour) {
+      setTime('Hour : Min');
+      return (`${t.getHours()}:${t.getMinutes()}`)
+    }
+    if (data == XRPhour) {
 
+      setTime('Hour : Min');
       return (`${t.getHours()}:${t.getMinutes()}`)
     }
 
+
     if (data == BTC24hour) {
 
-      console.log("Hour 24 ");
+      setTime('Hour');
+      return (`${t.getHours()}`)
+    }
+    if (data == ETH24hour) {
+
+      setTime('Hour');
+      return (`${t.getHours()}`)
+    }
+    if (data == XRP24hour) {
+
       setTime('Hour');
       return (`${t.getHours()}`)
     }
 
+
     if (data == BTCweek) {
 
-      console.log(`${t.getDate()}`);
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
+    if (data == ETHweek) {
+
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
+    if (data == XRPweek) {
+
       setTime('Day / Month');
       return (`${t.getDate()}/${t.getMonth() + 1}`)
     }
 
+
+
+    if (data == BTCmonth) {
+
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
+    if (data == ETHmonth) {
+
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
+    if (data == XRPmonth) {
+
+      setTime('Day / Month');
+      return (`${t.getDate()}/${t.getMonth() + 1}`)
+    }
   }
 
 
@@ -310,12 +603,16 @@ useEffect(() => {
   const [settingspaddig, setPadding] = useState(30);
   const [settingscandleWidth, setWidth] = useState(15);
 
+
+
+
+
+
+
   //zaloha
   const [BTC10min, setMinData] = useState<any[][]>();
   // axis time
   const [time, setTime] = useState('min');
-  
-  //Date [dataTimes, setTimeData] = useState<Date[]>();
 
 
   let candless = [
@@ -335,14 +632,39 @@ useEffect(() => {
   //--------------------------------------
 
 
+  function SetCurrency() {
+
+    if (currency == '1') {
+      return (
+        <Text style={styles.highlight}> {price?.price + ' $'} </Text>
+      )
+    }
+
+    if (currency == '2') {
+      return (
+        <Text style={styles.highlight}> {priceETH?.price + ' $'} </Text>
+      )
+    }
+
+    if (currency == '3') {
+      return (
+        <Text style={styles.highlight}> {priceXRP?.price + ' $'} </Text>
+      )
+    }
+
+  }
+
   return (
     <ScrollView>
       <Section title="Introduction">
-        This app downloads data from Binance to show exact price of <Text style={styles.highlight}>BTC</Text> in editable intervals.
+        This app downloads data from Binance to show exact price of <Text style={styles.highlight}>Assets</Text> in editable intervals.
       </Section>
 
+      <Section title='Time today'>
+        <Text>{finalObject}</Text>
+      </Section>
 
-      <Section title='Select currency'>
+      <Section title='Select cryptocurrency'>
 
         <SelectCountry
           style={styles.dropdown}
@@ -351,15 +673,16 @@ useEffect(() => {
           imageStyle={styles.imageStyle}
           iconStyle={styles.iconStyle}
           //  maxHeight={50}
-          value={country}
-          data={local_data}
+          value={currency}
+          data={currency_arr}
           valueField="value"
           labelField="lable"
           imageField="image"
-          placeholder="Select country"
+          placeholder="Select Cryptocurrency"
           searchPlaceholder="Search..."
           onChange={e => {
-            setCountry(e.value);
+            setCurrency(e.value);
+            console.log(e.value);
           }}
         />
 
@@ -367,30 +690,28 @@ useEffect(() => {
 
 
 
-      <Section title='Time today'>
-        <Text>{finalObject}</Text>
-      </Section>
 
-      <Section title='BTC price'>
-        <Text style={styles.highlight}>{price?.price}</Text>
-      </Section>
 
+      <Section title='Price of the asset in USDT'>
+
+        {SetCurrency()}
+
+      </Section>
 
 
 
       <Section title='Chart'>
-        <View style={styles.container}>
-
+        <View >
 
           <VictoryChart
-          
+
             domainPadding={{ x: settingspaddig }}
             scale={{ x: "time" }}
 
           >
 
-            <VictoryAxis tickFormat={(t) => SetSettings(t)} label={time}/>
-            <VictoryAxis dependentAxis />
+            <VictoryAxis tickFormat={(t) => SetSettings(t)} label={time} />
+            <VictoryAxis dependentAxis label={'USDT'} />
 
             <VictoryCandlestick
               candleWidth={settingscandleWidth}
@@ -424,8 +745,10 @@ useEffect(() => {
 
             <Button
               title="1 Month"
-              onPress={() => Alert.alert('Simple Button pressed')}
+              onPress={() => SetMonthGraph()}
             />
+
+
 
           </View>
 
@@ -482,15 +805,6 @@ const styles = StyleSheet.create({
     color: 'green',
   },
 
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: 'white',
-
-
-  },
-
 
   under: {
     flexDirection: 'column',
@@ -498,7 +812,7 @@ const styles = StyleSheet.create({
 
   nextto: {
     flexDirection: 'row',
-
+    justifyContent: 'space-evenly'
   },
 
 
