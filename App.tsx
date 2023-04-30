@@ -14,6 +14,7 @@ import {
   Alert,
   Button,
   DevSettings,
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -31,6 +32,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
 import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 
 type SectionProps = PropsWithChildren<{
@@ -113,29 +115,24 @@ function App(this: any): JSX.Element {
 
   var finalObject = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
 
+  
+
 
   const currency_arr = [
     {
       value: '1',
       lable: 'BTC chart',
-      image: {
-        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/Bitcoin.png', // TO DO: relativni PATH 
-
-      },
+      image: require('./images/Bitcoin.png'),
     },
     {
       value: '2',
       lable: 'ETH chart',
-      image: {
-        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/ETH.png',
-      },
+      image: require('./images/ETH.png'),
     },
     {
       value: '3',
       lable: 'XRP chart',
-      image: {
-        uri: '/Users/jankarasek/XcodeRepos/CryptoIndicatior/images/xrp.png',
-      },
+      image: require('./images/xrp.png'),
     },
   ];
 
@@ -604,11 +601,6 @@ function App(this: any): JSX.Element {
   const [settingscandleWidth, setWidth] = useState(15);
 
 
-
-
-
-
-
   //zaloha
   const [BTC10min, setMinData] = useState<any[][]>();
   // axis time
@@ -689,7 +681,7 @@ function App(this: any): JSX.Element {
       </Section>
 
 
-
+     
 
 
       <Section title='Price of the asset in USDT'>
@@ -706,7 +698,7 @@ function App(this: any): JSX.Element {
           <VictoryChart
 
             domainPadding={{ x: settingspaddig }}
-            scale={{ x: "time" }}
+            scale={{ x: "time" , y: 'linear'}}
 
           >
 
@@ -852,10 +844,6 @@ const styles = StyleSheet.create({
 export default App;
 
 
-
-function setdata(data: any) {
-  throw new Error('Function not implemented.');
-}
 
 
 
