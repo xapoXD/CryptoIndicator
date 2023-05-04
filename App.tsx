@@ -1,12 +1,7 @@
-
-
 import React, { useEffect, useState, Component } from 'react';
-
 
 import { VictoryAxis, VictoryBar, VictoryCandlestick, VictoryChart, VictoryTheme } from "victory-native";
 import { Dropdown, SelectCountry } from 'react-native-element-dropdown';
-
-
 
 import type { PropsWithChildren } from 'react';
 
@@ -83,10 +78,6 @@ type PriceXRP = {
 }
 
 
-
-
-
-
 function App(this: any): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -97,19 +88,14 @@ function App(this: any): JSX.Element {
 
   //Get Current Date
   var date = new Date().getDate();
-
   //Get Current Month
   var month = new Date().getMonth() + 1;
-
   //Get Current Year
   var year = new Date().getFullYear();
-
   //Get Current Time Hours
   var hours = new Date().getHours();
-
   //Get Current Time Minutes
   var min = new Date().getMinutes();
-
   //Get Current Time Seconds
   var sec = new Date().getSeconds();
 
@@ -137,9 +123,6 @@ function App(this: any): JSX.Element {
   ];
 
   const [currency, setCurrency] = useState('1');
-
-
-
 
 
 
@@ -182,10 +165,8 @@ function App(this: any): JSX.Element {
       });
   }, []);
 
+  // BTC DATA
 
-
-
-  // BTC DATA--------------------------------------------------------------------------------------
   const [data, setdata] = useState<any[][]>();
   // CALL 10 MIN
   useEffect(() => {
@@ -342,7 +323,7 @@ function App(this: any): JSX.Element {
 
   //--------------------------------------------------------          
 
-  // ETH DATA
+  // XRP DATA
   const [XRP10m, setXRP1Om] = useState<any[][]>();
   // CALL 10 MIN
   useEffect(() => {
@@ -417,10 +398,6 @@ function App(this: any): JSX.Element {
         console.log(err.message);
       });
   }, []);
-
-
-
-
 
 
 
@@ -500,10 +477,6 @@ function App(this: any): JSX.Element {
       setdata(XRPmonth);
     }
   }
-
-
-
-
 
   // set setttings of graph
   function SetSettings(t: any) {
@@ -596,7 +569,7 @@ function App(this: any): JSX.Element {
   }
 
 
-  // BASIC SETTTINGS !!!!!!!!!!!!!!!!!!!!
+  // BASIC SETTTINGS
   const [settingspaddig, setPadding] = useState(30);
   const [settingscandleWidth, setWidth] = useState(15);
 
@@ -620,8 +593,6 @@ function App(this: any): JSX.Element {
     candless.push({ x: STARTdate, open: data[indexes][1], close: data[indexes][4], high: data[indexes][2], low: data[indexes][3] })
 
   })
-
-  //--------------------------------------
 
 
   function SetCurrency() {
@@ -681,10 +652,7 @@ function App(this: any): JSX.Element {
       </Section>
 
 
-     
-
-
-      <Section title='Price of the asset in USDT'>
+      <Section title='Price of the asset in USD'>
 
         {SetCurrency()}
 
@@ -740,23 +708,9 @@ function App(this: any): JSX.Element {
               onPress={() => SetMonthGraph()}
             />
 
-
-
           </View>
 
         </View>
-
-
-
-
-
-
-
-
-
-
-
-
 
       </Section>
 
@@ -767,10 +721,7 @@ function App(this: any): JSX.Element {
     </ScrollView>
   );
 
-
-
 }
-
 
 
 const styles = StyleSheet.create({
@@ -807,10 +758,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly'
   },
 
-
-
-
-
   dropdown: {
     width: 200,
     height: 40,
@@ -834,9 +781,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-
-
-
 
 });
 
